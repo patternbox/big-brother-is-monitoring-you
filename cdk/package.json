@@ -1,5 +1,5 @@
 {
-  "name": "big-brother",
+  "name": "big-brother-is-monitoring-you",
   "version": "0.1.0",
   "bin": {
     "cdk": "bin/cdk.js"
@@ -12,9 +12,11 @@
     "cdk": "cdk"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.110",
     "@types/jest": "^27.5.0",
     "@types/node": "18.16.3",
     "aws-cdk": "2.78.0",
+    "aws-sdk": "^2.1354.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
     "ts-node": "^10.9.1",

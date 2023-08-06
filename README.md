@@ -20,3 +20,9 @@ npx cdk deploy MonitoringLink --require-approval never \
    --parameters MonitoringSinkArn=$MONITORING_SINK_ARN \
    --parameters AccountLabel="Sandbox account"
 ```
+
+```bash
+# Deploy widget "hello"
+awsume sandbox-developer-profile --auto-refresh --output-profile sandbox-developer
+npx cdk deploy WidgetHello --require-approval never
+```
