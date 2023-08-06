@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MonitoringSinkStack should match snapshot 1`] = `
+Object {
+  "Outputs": Object {
+    "MonitoringSinkArn": Object {
+      "Export": Object {
+        "Name": "MonitoringSinkStack:MonitoringSinkArn",
+      },
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "MonitoringSink",
+          "Arn",
+        ],
+      },
+    },
+  },
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "LinkedAccounts": Object {
+      "Description": "A list of linked monitoring linked accounts",
+      "Type": "CommaDelimitedList",
+    },
+  },
+  "Resources": Object {
+    "MonitoringSink": Object {
+      "Properties": Object {
+        "Name": "MonitoringSinkStack",
+        "Policy": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "oam:CreateLink",
+                "oam:UpdateLink",
+              ],
+              "Condition": Object {
+                "ForAllValues:StringEquals": Object {
+                  "oam:ResourceTypes": Array [
+                    "AWS::CloudWatch::Metric",
+                    "AWS::Logs::LogGroup",
+                    "AWS::XRay::Trace",
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Object {
+                  "Ref": "LinkedAccounts",
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::Oam::Sink",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

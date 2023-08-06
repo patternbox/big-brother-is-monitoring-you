@@ -2,7 +2,7 @@
 
 import { App, Tags } from 'aws-cdk-lib'
 import { MonitoringSinkStack } from '../lib/monitoring-sink-stack'
-import { MonitoringLinkStack } from '../lib/monitoring-link-stack'
+import { MonitoringLinkStack } from '../lib/oam/monitoring-link-stack'
 
 const app = new App()
 
