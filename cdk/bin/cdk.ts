@@ -4,20 +4,28 @@ import { App, Tags } from 'aws-cdk-lib'
 import { MonitoringSinkStack } from '../lib/oam/monitoring-sink-stack'
 import { MonitoringLinkStack } from '../lib/oam/monitoring-link-stack'
 import { WidgetHelloStack } from '../lib/dashboard/widget-hello-stack'
+import { MonitoringDashboardStack } from '../lib/dashboard/monitoring-dashboard-stack'
+
+const STACK_PREFIX = 'cicd-monitoring'
 
 const app = new App()
 
 Tags.of(app).add('project', 'Big brother is monitoring you')
 
 new MonitoringSinkStack(app, 'MonitoringSink', {
-    stackName: 'cicd-monitoring-sink',
+    stackName: `${STACK_PREFIX}-sink`,
 })
 
 new MonitoringLinkStack(app, 'MonitoringLink', {
-    stackName: 'cicd-monitoring-link',
+    stackName: `${STACK_PREFIX}-link`
 })
 
 new WidgetHelloStack(app, 'WidgetHello', {
-    stackName: 'cicd-monitoring-widget-hello',
+    stackName: `${STACK_PREFIX}-widget-hello`,
     widgetName: 'widget-hello',
+})
+
+new MonitoringDashboardStack(app, 'MonitoringDashboard', {
+    stackName: `${STACK_PREFIX}-dashboard`,
+    stackPrefix: STACK_PREFIX,
 })

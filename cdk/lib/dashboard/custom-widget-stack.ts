@@ -1,6 +1,7 @@
-import { App, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
+import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 import { NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs/lib/function'
+import { Construct } from 'constructs'
 
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
@@ -12,7 +13,7 @@ export interface CustomWidgetStackProps extends StackProps {
 
 export abstract class CustomWidgetStack extends Stack {
 
-    constructor(scope: App, id: string, props: CustomWidgetStackProps) {
+    constructor(scope: Construct, id: string, props: CustomWidgetStackProps) {
         super(scope, id, props)
 
         const functionName = props.stackName!
@@ -52,7 +53,7 @@ export abstract class CustomWidgetStack extends Stack {
         }))
     }
 
-    getLogPolicy(functionName: string): iam.PolicyDocument {
+    private getLogPolicy(functionName: string): iam.PolicyDocument {
         return new iam.PolicyDocument({
             statements: [
                 new iam.PolicyStatement({
