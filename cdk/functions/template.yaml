@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+    BinaryMediaTypes:
+      - "*/*"
+
+Parameters:
+  WidgetCode:
+    Type: String
+
+Resources:
+  AwsLambdaHttp:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: !Ref WidgetCode
+      Handler: index.localHandler
+      Runtime: nodejs18.x
+      MemorySize: 2048
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 20
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /widget
+            Method: any
