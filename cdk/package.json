@@ -12,16 +12,19 @@
     "cdk": "cdk"
   },
   "devDependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.385.0",
+    "@aws-sdk/client-oam": "^3.385.0",
+    "@aws-sdk/client-sts": "^3.385.0",
     "@types/aws-lambda": "^8.10.110",
     "@types/jest": "^27.5.0",
     "@types/node": "18.16.3",
     "aws-cdk": "2.78.0",
     "aws-sdk": "^2.1354.0",
     "jest": "^26.4.2",
+    "source-map-support": "^0.5.16",
     "ts-jest": "^26.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "~4.9.5",
-    "source-map-support": "^0.5.16"
+    "typescript": "~4.9.5"
   },
   "dependencies": {
     "aws-cdk-lib": "2.80.0",

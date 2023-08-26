@@ -22,7 +22,15 @@ npx cdk deploy MonitoringLink --require-approval never \
 ```
 
 ```bash
-# Deploy widget "hello"
-awsume sandbox-developer-profile --auto-refresh --output-profile sandbox-developer
+awsume monitoring-developer-profile --auto-refresh --output-profile monitoring-developer
+
+# Deploy custom widget "hello"
 npx cdk deploy WidgetHello --require-approval never
+
+# Deploy custom widget "alarms"
+npx cdk deploy WidgetAlarms --require-approval never \
+   --parameters MonitoringSinkArn=$MONITORING_SINK_ARN
+
+# Deploy monitoring-dashbaord
+npx cdk deploy MonitoringDashboard --require-approval never
 ```
