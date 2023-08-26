@@ -44,12 +44,17 @@ pushd "$(dirname $0)" > /dev/null
 
 WIDGET_CODE=$(cat ../cdk.out/${WIDGET_NAME}.assets.json | ${JQ_CMD} -r '.files[][] | select(.packaging == "zip").path')
 
+MONITORING_SINK_ARN=$(aws cloudformation list-exports \
+  --query "Exports[?Name=='cicd-monitoring-sink:MonitoringSinkArn'].Value" \
+  --output text)
+
 sam --version 2> /dev/null
 [ $? -eq 0 ] && SAM_CMD=sam || SAM_CMD=sam.cmd # Git-Bash for Windows magic
 
 $SAM_CMD local start-api \
-  --parameter-overrides ParameterKey=WidgetCode,ParameterValue=../cdk.out/${WIDGET_CODE} \
-  --warm-containers EAGER  \
-  --template template.yaml
+  --template template.yaml \
+  --parameter-overrides \
+      ParameterKey=WidgetCode,ParameterValue=../cdk.out/${WIDGET_CODE} \
+      ParameterKey=MonitoringSinkArn,ParameterValue=${MONITORING_SINK_ARN}
 
 popd > /dev/null

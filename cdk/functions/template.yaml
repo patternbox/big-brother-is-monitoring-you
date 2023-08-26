@@ -9,6 +9,8 @@ Globals:
 Parameters:
   WidgetCode:
     Type: String
+  MonitoringSinkArn:
+    Type: String
 
 Resources:
   AwsLambdaHttp:
@@ -20,6 +22,9 @@ Resources:
       MemorySize: 2048
       Policies: AWSLambdaBasicExecutionRole
       Timeout: 20
+      Environment:
+        Variables:
+          MONITORING_SINK_ARN: !Ref MonitoringSinkArn
       Events:
         GetResource:
           Type: Api
