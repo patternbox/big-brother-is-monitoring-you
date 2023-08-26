@@ -6,7 +6,7 @@ awsume monitoring-developer-profile --auto-refresh --output-profile monitoring-d
 npx cdk deploy MonitoringSink --require-approval never \
    --parameters LinkedAccounts="${DEVELOP_ACCOUNT},${PRODUCTION_ACCOUNT}"
 
-MONITORING_SINK_ARN=$(aws cloudformation list-exports \
+export MONITORING_SINK_ARN=$(aws cloudformation list-exports \
   --query "Exports[?Name=='cicd-monitoring-sink:MonitoringSinkArn'].Value" \
   --output text)
 echo $MONITORING_SINK_ARN

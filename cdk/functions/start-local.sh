@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function showUsage {
-  echo "Usage: $0 -w|--widget <widget-hello|widget-alarms>"
+  echo "Usage: $0 -w|--widget <widget-hello|widget-alarms|widget-gates>"
   exit 1
 }
 

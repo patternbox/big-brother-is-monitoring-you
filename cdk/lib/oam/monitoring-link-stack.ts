@@ -35,7 +35,27 @@ export class MonitoringLinkStack extends Stack {
         iam.ManagedPolicy.fromAwsManagedPolicyName('CloudWatchReadOnlyAccess'),
         iam.ManagedPolicy.fromAwsManagedPolicyName('CloudWatchAutomaticDashboardsAccess'),
       ]
-    })    
+    })
+
+    new iam.Role(this, 'DDBCrossAccountSharingRole', {
+      roleName: 'DynamoDB-CrossAccountSharingRole',
+      assumedBy: new iam.AccountPrincipal(sinkArnSplit.account),
+      path: '/',
+      inlinePolicies: {
+        'dynamodb': new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              actions: [
+                'dynamodb:*',
+              ],
+              resources: [
+                `arn:aws:dynamodb:${this.region}:${this.account}:table/*`,
+              ],
+            }),
+          ],
+        })
+      }
+    })
 
   }
 }
