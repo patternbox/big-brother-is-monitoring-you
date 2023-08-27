@@ -5,7 +5,7 @@ import { MonitoringSinkStack } from '../lib/oam/monitoring-sink-stack'
 import { MonitoringLinkStack } from '../lib/oam/monitoring-link-stack'
 import { WidgetHelloStack } from '../lib/dashboard/widget-hello-stack'
 import { WidgetAlarmsStack } from '../lib/dashboard/widget-alarms-stack'
-import { WidgetDeploymentGatesStack } from '../lib/dashboard/widget-gates-stack'
+import { WidgetDeploymentGatesStack } from '../lib/dashboard/widget-deployment-gates-stack'
 import { MonitoringDashboardStack } from '../lib/dashboard/monitoring-dashboard-stack'
 
 const STACK_PREFIX = 'cicd-monitoring'

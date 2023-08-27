@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-cloudwatch": "^3.385.0",
+    "@aws-sdk/client-dynamodb": "^3.385.0",
     "@aws-sdk/client-oam": "^3.385.0",
     "@aws-sdk/client-sts": "^3.385.0",
     "@types/aws-lambda": "^8.10.110",

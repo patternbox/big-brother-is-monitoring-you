@@ -1,5 +1,6 @@
 import * as oam from '@aws-sdk/client-oam'
 import * as sts from '@aws-sdk/client-sts'
+import * as ddb from '@aws-sdk/client-dynamodb'
 import * as cw from '@aws-sdk/client-cloudwatch'
 
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-oam/
@@ -26,33 +27,32 @@ const assumeCrossAccountCredentials = async (accountId: string): Promise<sts.Cre
     return response.Credentials!
 }
 
-const fetchCrossAccountAlarms = async (credentials: sts.Credentials): Promise<cw.MetricAlarm[]> => {
-    const awsCredentialIdentity = {
-        accessKeyId: credentials.AccessKeyId!,
-        secretAccessKey: credentials.SecretAccessKey!,
-        sessionToken: credentials.SessionToken,
-    }
-    const cwClient = new cw.CloudWatchClient({ credentials: awsCredentialIdentity })
-    const command = new cw.DescribeAlarmsCommand({
-    })
-    const response = await cwClient.send(command)
-    return response.MetricAlarms!
+enum GateState {
+    OPEN,
+    CLOSED,
 }
 
-const alarmArnAsHref = (alarmArn: string): string => {
-    const arnParts = alarmArn.split(':')
-    const region = arnParts[3]
-    const accountId = arnParts[4]
-    const alarmName = arnParts[6]
-    return `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#alarmsV2:alarm/${alarmName}?accountId=${accountId}`
+interface DeploymentGate {
+    GateName: string,
+    GateState: GateState,
+    GateComment?: string,
 }
 
-const metricAlarmsAsHtml = (metricAlarms: cw.MetricAlarm[]): string => {
+const fetchCrossAccountGateStates = async (credentials: sts.Credentials): Promise<DeploymentGate[]> => {
+    return [
+        {
+            GateName: 'infra',
+            GateState: GateState.CLOSED,
+        }
+    ]
+}
+
+const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[]): string => {
     let html = ''
 
-    for (const alarm of metricAlarms) {
-        const alarmLink = `<a target="_blank" href="${alarmArnAsHref(alarm.AlarmArn!)}">${alarm.AlarmName}</a>`
-        html += `<li>${alarmLink}<br>${alarm.AlarmDescription}</li>`
+    for (const gate of deploymentGates) {
+        //const alarmLink = `<a target="_blank" href="${alarmArnAsHref(alarm.AlarmArn!)}">${alarm.AlarmName}</a>`
+        html += `<li>${gate.GateName}</li>`
     }
 
     return html
@@ -65,9 +65,11 @@ export const handler = async (_event: any): Promise<string> => {
     for (const linkedAccount of linkedSourceAcounts) {
         const crossAccountId = linkedAccount.LinkArn!.split(':')[4]
         const crossAccountCredentials = await assumeCrossAccountCredentials(crossAccountId)
-        const metricAlarms = await fetchCrossAccountAlarms(crossAccountCredentials)
-        const metricAlarmsHtml = metricAlarmsAsHtml(metricAlarms)
-        html += `<li>${linkedAccount.Label} (${crossAccountId})<ul>${metricAlarmsHtml}</ul></li>`
+
+
+        const deploymentGates = await fetchCrossAccountGateStates(crossAccountCredentials)
+        const deploymentGatesHtml = deploymentGatesAsHtml(deploymentGates)
+        html += `<li>${linkedAccount.Label} (${crossAccountId})<ul>${deploymentGatesHtml}</ul></li>`
     }
 
     console.log(html)

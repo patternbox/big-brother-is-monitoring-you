@@ -28,17 +28,15 @@ if [ -z "$WIDGET_NAME" ] ; then
   showUsage
 fi
 
-WIDGET_NAME="${WIDGET_NAME/-/' '}"
+WIDGET_NAME="${WIDGET_NAME//-/' '}" # replace '-' by ' '
 WIDGET_NAME=( $WIDGET_NAME ) # without quotes
-WIDGET_NAME="${WIDGET_NAME[@]^}"
-WIDGET_NAME="${WIDGET_NAME/ /}"
+WIDGET_NAME="${WIDGET_NAME[@]^}" # uppercase first letters
+WIDGET_NAME="${WIDGET_NAME// /}" # remove spaces between words
 
 set -o pipefail
 
 jq --version 2> /dev/null
 [ $? -eq 0 ] && JQ_CMD=jq || JQ_CMD=jq-win64.exe # Git-Bash for Windows magic
-
-#set -x
 
 pushd "$(dirname $0)" > /dev/null
 
