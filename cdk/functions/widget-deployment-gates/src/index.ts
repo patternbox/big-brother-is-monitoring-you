@@ -1,7 +1,9 @@
 import * as oam from '@aws-sdk/client-oam'
 import * as sts from '@aws-sdk/client-sts'
 import * as ddb from '@aws-sdk/client-dynamodb'
-import * as cw from '@aws-sdk/client-cloudwatch'
+
+import { ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
+import { Context } from 'aws-lambda'
 
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-oam/
 const oamClient = new oam.OAMClient({});
@@ -27,49 +29,66 @@ const assumeCrossAccountCredentials = async (accountId: string): Promise<sts.Cre
     return response.Credentials!
 }
 
-enum GateState {
-    OPEN,
-    CLOSED,
-}
-
 interface DeploymentGate {
     GateName: string,
-    GateState: GateState,
-    GateComment?: string,
+    GateClosed: boolean,
+    GateComment: string,
 }
 
 const fetchCrossAccountGateStates = async (credentials: sts.Credentials): Promise<DeploymentGate[]> => {
-    return [
-        {
-            GateName: 'infra',
-            GateState: GateState.CLOSED,
-        }
-    ]
-}
-
-const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[]): string => {
-    let html = ''
-
-    for (const gate of deploymentGates) {
-        //const alarmLink = `<a target="_blank" href="${alarmArnAsHref(alarm.AlarmArn!)}">${alarm.AlarmName}</a>`
-        html += `<li>${gate.GateName}</li>`
+    const awsCredentialIdentity = {
+        accessKeyId: credentials.AccessKeyId!,
+        secretAccessKey: credentials.SecretAccessKey!,
+        sessionToken: credentials.SessionToken,
     }
-
-    return html
+    const ddbClient = new ddb.DynamoDBClient({ credentials: awsCredentialIdentity })
+    const docClient = DynamoDBDocumentClient.from(ddbClient);
+    const command = new ScanCommand({
+        TableName: process.env.DEPLOYMENT_GATES_TABLE,
+    })
+    const response = await docClient.send(command)
+    // [{"closed":false,"gate-name":"infrastructure","reason":""},{"closed":false,"gate-name":"application","reason":""}]
+    // console.log(JSON.stringify(response.Items))
+    return response.Items!.map(record => {
+        return {
+            GateName: record['gate-name'],
+            GateClosed: record['closed'],
+            GateComment: record['reason'] || '',
+        }
+    })
 }
 
-export const handler = async (_event: any): Promise<string> => {
+// https://github.com/aws-samples/cloudwatch-custom-widgets-samples#cwdb-action-examples
+const deploymentGateAsForm = (deploymentGate: DeploymentGate, lambdaFunctionArn: string): string => {
+    const gateComment = `<input name="comment" value="${deploymentGate.GateComment}" size="20">`
+    const gateToggle = `<input type="checkbox" name="favorite_pet" value="Cats">`
+    const execButton = `<a class="btn">Execute</a>`
+    const htmlForm = `<form>${gateComment}${gateToggle}${execButton}</form>`
+    const cwdbAction = `<cwdb-action action="call" endpoint="${lambdaFunctionArn}" />`
+    return `${htmlForm}${cwdbAction}`
+}
+
+// https://catalog.workshops.aws/observability/en-US/aws-native/dashboards/custom-widgets/other-sources/display-results
+const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], lambdaFunctionArn: string): string => {
+    return deploymentGates
+        .map((gate) => `<li>${deploymentGateAsForm(gate, lambdaFunctionArn)}</li>`)
+        .join('\n')
+}
+
+interface ContextLight {
+    invokedFunctionArn: string
+}
+
+export const handler = async (_event: any, context?: any /*|ContextLight*/): Promise<string> => {
     let html = ''
     const linkedSourceAcounts = await fetchLinkedSourceAccounts()
 
     for (const linkedAccount of linkedSourceAcounts) {
         const crossAccountId = linkedAccount.LinkArn!.split(':')[4]
         const crossAccountCredentials = await assumeCrossAccountCredentials(crossAccountId)
-
-
         const deploymentGates = await fetchCrossAccountGateStates(crossAccountCredentials)
-        const deploymentGatesHtml = deploymentGatesAsHtml(deploymentGates)
-        html += `<li>${linkedAccount.Label} (${crossAccountId})<ul>${deploymentGatesHtml}</ul></li>`
+        const deploymentGatesHtml = deploymentGatesAsHtml(deploymentGates, context!.invokedFunctionArn)
+        html += `<li>${linkedAccount.Label} (${crossAccountId})<br />&nbsp;<ul>${deploymentGatesHtml}</ul></li>`
     }
 
     console.log(html)
@@ -79,7 +98,7 @@ export const handler = async (_event: any): Promise<string> => {
 export const localHandler = async (event: any): Promise<any> => {
 
     return {
-        'body': await handler(event),
+        'body': await handler(event, { invokedFunctionArn: 'arn:aws:lambda:local:123456789012:function:deployment-gates' }),
         'statusCode': 200,
         'headers': {
             'Content-Type': 'text/html; charset=UTF-8',

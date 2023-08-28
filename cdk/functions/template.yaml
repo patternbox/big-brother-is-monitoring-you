@@ -25,6 +25,7 @@ Resources:
       Environment:
         Variables:
           MONITORING_SINK_ARN: !Ref MonitoringSinkArn
+          DEPLOYMENT_GATES_TABLE: 'cicd-pipeline-deployment-gates'
       Events:
         GetResource:
           Type: Api
