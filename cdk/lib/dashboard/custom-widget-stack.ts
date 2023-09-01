@@ -30,6 +30,7 @@ export abstract class CustomWidgetStack extends Stack {
             inlinePolicies: {
                 'logPolicy': this.getLogPolicy(functionName),
                 'oamPolicy': this.getOamPolicy(functionName),
+                'crossAccountPolicy': this.getCrossAccountPolicy(functionName),
             },
             managedPolicies: this.getManagedPolicies(),
         })
@@ -79,6 +80,21 @@ export abstract class CustomWidgetStack extends Stack {
                     ],
                     resources: [
                         `arn:aws:oam:${this.region}:${this.account}:sink/*`,
+                    ],
+                }),
+            ],
+        })
+    }
+
+    private getCrossAccountPolicy(functionName: string): iam.PolicyDocument {
+        return new iam.PolicyDocument({
+            statements: [
+                new iam.PolicyStatement({
+                    actions: [
+                        'sts:AssumeRole',
+                    ],
+                    resources: [
+                        'arn:aws:iam::*:role/CloudWatch-CrossAccountSharingRole',
                     ],
                 }),
             ],

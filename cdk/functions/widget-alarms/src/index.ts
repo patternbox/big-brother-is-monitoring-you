@@ -47,15 +47,9 @@ const alarmArnAsHref = (alarmArn: string): string => {
     return `https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#alarmsV2:alarm/${alarmName}?accountId=${accountId}`
 }
 
-const metricAlarmsAsHtml = (metricAlarms: cw.MetricAlarm[]): string => {
-    let html = ''
-
-    for (const alarm of metricAlarms) {
-        const alarmLink = `<a target="_blank" href="${alarmArnAsHref(alarm.AlarmArn!)}">${alarm.AlarmName}</a>`
-        html += `<li>${alarmLink}<br>${alarm.AlarmDescription}</li>`
-    }
-
-    return html
+const metricAlarmAsHtml = (metricAlarm: cw.MetricAlarm): string => {
+    const alarmLink = `<a target="_blank" href="${alarmArnAsHref(metricAlarm.AlarmArn!)}">${metricAlarm.AlarmName}</a>`
+    return `<li>${alarmLink} [${metricAlarm.StateValue}]<br>${metricAlarm.AlarmDescription}</li>`
 }
 
 export const handler = async (_event: any): Promise<string> => {
@@ -66,7 +60,7 @@ export const handler = async (_event: any): Promise<string> => {
         const crossAccountId = linkedAccount.LinkArn!.split(':')[4]
         const crossAccountCredentials = await assumeCrossAccountCredentials(crossAccountId)
         const metricAlarms = await fetchCrossAccountAlarms(crossAccountCredentials)
-        const metricAlarmsHtml = metricAlarmsAsHtml(metricAlarms)
+        const metricAlarmsHtml = metricAlarms.map(alarm => metricAlarmAsHtml(alarm)).join('\n')
         html += `<li>${linkedAccount.Label} (${crossAccountId})<ul>${metricAlarmsHtml}</ul></li>`
     }
 
