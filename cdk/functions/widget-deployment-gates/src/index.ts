@@ -91,7 +91,7 @@ export const handler = async (_event: any, context?: any /*|ContextLight*/): Pro
         html += `<li>${linkedAccount.Label} (${crossAccountId})<br />&nbsp;<ul>${deploymentGatesHtml}</ul></li>`
     }
 
-    console.log(html)
+    //console.log(html)
     return `<ul>${html}</ul>`
 }
 

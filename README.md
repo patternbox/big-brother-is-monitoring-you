@@ -31,6 +31,10 @@ npx cdk deploy WidgetHello --require-approval never
 npx cdk deploy WidgetAlarms --require-approval never \
    --parameters MonitoringSinkArn=$MONITORING_SINK_ARN
 
+# Deploy custom widget "deployment-gates"
+npx cdk deploy WidgetDeploymentGates --require-approval never \
+   --parameters MonitoringSinkArn=$MONITORING_SINK_ARN
+
 # Deploy monitoring-dashbaord
 npx cdk deploy MonitoringDashboard --require-approval never
 ```

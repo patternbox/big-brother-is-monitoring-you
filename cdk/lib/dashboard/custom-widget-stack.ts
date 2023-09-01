@@ -29,6 +29,7 @@ export abstract class CustomWidgetStack extends Stack {
             assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
             inlinePolicies: {
                 'logPolicy': this.getLogPolicy(functionName),
+                'oamPolicy': this.getOamPolicy(functionName),
             },
             managedPolicies: this.getManagedPolicies(),
         })
@@ -62,6 +63,22 @@ export abstract class CustomWidgetStack extends Stack {
                     ],
                     resources: [
                         `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/lambda/${functionName}:*`,
+                    ],
+                }),
+            ],
+        })
+    }
+
+    private getOamPolicy(functionName: string): iam.PolicyDocument {
+        return new iam.PolicyDocument({
+            statements: [
+                new iam.PolicyStatement({
+                    actions: [
+                        'oam:Get*',
+                        'oam:List*',
+                    ],
+                    resources: [
+                        `arn:aws:oam:${this.region}:${this.account}:sink/*`,
                     ],
                 }),
             ],
