@@ -4,6 +4,7 @@ import * as ddb from '@aws-sdk/client-dynamodb'
 
 import { ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
 import { Context } from 'aws-lambda'
+import { readFileSync } from 'fs'
 
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-oam/
 const oamClient = new oam.OAMClient({});
@@ -59,19 +60,31 @@ const fetchCrossAccountGateStates = async (credentials: sts.Credentials): Promis
 }
 
 // https://github.com/aws-samples/cloudwatch-custom-widgets-samples#cwdb-action-examples
-const deploymentGateAsForm = (deploymentGate: DeploymentGate, lambdaFunctionArn: string): string => {
-    const gateComment = `<input name="comment" value="${deploymentGate.GateComment}" size="20">`
-    const gateToggle = `<input type="checkbox" name="favorite_pet" value="Cats">`
+const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string, lambdaFunctionArn: string): string => {
+    const gateComment = `<input type="text" id="comment-${elementId}" name="text-${elementId}" value="${deploymentGate.GateComment}" size="30">`
+
+    /*const gateToggle = `<input type="checkbox" id="switch" class="checkbox">`
+    const toggleLabel = `<label for="switch" class="toggle"><p>OFF    ON</p></label>`
     const execButton = `<a class="btn">Execute</a>`
-    const htmlForm = `<form>${gateComment}${gateToggle}${execButton}</form>`
-    const cwdbAction = `<cwdb-action action="call" endpoint="${lambdaFunctionArn}" />`
+    const htmlForm = `<form>${gateComment}${gateToggle}${toggleLabel}${execButton}</form>`*/
+
+    /*const gateToggle = `<label class="switch"><input type="checkbox"><span class="slider"></span></label>`
+    const execButton = `<a class="btn">Execute</a>`
+    const htmlForm = `<form>${gateComment}${gateToggle}${execButton}</form>`*/
+
+    const gateToggle = `<input type="checkbox" id="checkbox-${elementId}" name="check-${elementId}"><label for="${elementId}" class="text"></label>`
+    const execButton = `<a class="btn btn-primary">OK</a>`
+    //const htmlForm = `<form><span class="checkbox">${gateComment}${gateToggle}${execButton}</span></form>`
+    const htmlForm = `<div class="gate-state"><form>${gateComment}${gateToggle}</form></div>${execButton}`
+
+    const cwdbAction = `<cwdb-action display="my-widget" action="call" endpoint="${lambdaFunctionArn}">{ "instanceId": "i-342389adbfef" }</cwdb-action>`
     return `${htmlForm}${cwdbAction}`
 }
 
 // https://catalog.workshops.aws/observability/en-US/aws-native/dashboards/custom-widgets/other-sources/display-results
-const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], lambdaFunctionArn: string): string => {
+const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], idPrefix: string, lambdaFunctionArn: string): string => {
     return deploymentGates
-        .map((gate) => `<li>${deploymentGateAsForm(gate, lambdaFunctionArn)}</li>`)
+        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn)}</li>`)
         .join('\n')
 }
 
@@ -79,7 +92,11 @@ interface ContextLight {
     invokedFunctionArn: string
 }
 
-export const handler = async (_event: any, context?: any /*|ContextLight*/): Promise<string> => {
+const css = (): string => {
+    return readFileSync('./style.css', 'utf-8')
+}
+
+export const handler = async (_event: any, context?: Context|ContextLight): Promise<string> => {
     let html = ''
     const linkedSourceAcounts = await fetchLinkedSourceAccounts()
 
@@ -87,12 +104,14 @@ export const handler = async (_event: any, context?: any /*|ContextLight*/): Pro
         const crossAccountId = linkedAccount.LinkArn!.split(':')[4]
         const crossAccountCredentials = await assumeCrossAccountCredentials(crossAccountId)
         const deploymentGates = await fetchCrossAccountGateStates(crossAccountCredentials)
-        const deploymentGatesHtml = deploymentGatesAsHtml(deploymentGates, context!.invokedFunctionArn)
-        html += `<li>${linkedAccount.Label} (${crossAccountId})<br />&nbsp;<ul>${deploymentGatesHtml}</ul></li>`
+        const deploymentGatesHtml = deploymentGatesAsHtml(deploymentGates, crossAccountId, context!.invokedFunctionArn)
+        html += `<li>${linkedAccount.Label} (${crossAccountId})<br />&nbsp;<ul style="list-style-type: none;">${deploymentGatesHtml}</ul></li>`
     }
 
-    //console.log(html)
-    return `<ul>${html}</ul>`
+    console.log(JSON.stringify(_event.widgetContext, null, 3))
+    console.log(JSON.stringify(_event.widgetContext.forms, null, 3))
+
+    return `<style>${css()}</style><ul>${html}</ul>`
 }
 
 export const localHandler = async (event: any): Promise<any> => {

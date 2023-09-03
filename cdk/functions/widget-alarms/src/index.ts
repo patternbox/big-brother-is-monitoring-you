@@ -49,7 +49,7 @@ const alarmArnAsHref = (alarmArn: string): string => {
 
 const metricAlarmAsHtml = (metricAlarm: cw.MetricAlarm): string => {
     const alarmLink = `<a target="_blank" href="${alarmArnAsHref(metricAlarm.AlarmArn!)}">${metricAlarm.AlarmName}</a>`
-    return `<li>${alarmLink} [${metricAlarm.StateValue}]<br>${metricAlarm.AlarmDescription}</li>`
+    return `<li>${alarmLink} (${metricAlarm.StateValue})<br>${metricAlarm.AlarmDescription}</li>`
 }
 
 export const handler = async (_event: any): Promise<string> => {

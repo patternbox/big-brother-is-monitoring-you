@@ -51,6 +51,16 @@ export abstract class CustomWidgetStack extends Stack {
                 minify: false,
                 sourceMap: true,
                 sourcesContent: true,
+                commandHooks: {
+                    beforeBundling: (_inputDir: string, _outputDir: string): string[] => [],
+                    afterBundling: (inputDir: string, outputDir: string): string[] => [
+                        `cp ${inputDir}/functions/widget-deployment-gates/assets/*.css ${outputDir}`,
+                        `echo ------------------------------`,
+                        `ls -la ${outputDir}`,
+                        `echo ------------------------------`,
+                    ],
+                    beforeInstall: (_inputDir: string, _outputDir: string): string[] => [],
+                },
             },
         }))
     }
@@ -86,7 +96,7 @@ export abstract class CustomWidgetStack extends Stack {
         })
     }
 
-    private getCrossAccountPolicy(functionName: string): iam.PolicyDocument {
+    getCrossAccountPolicy(functionName: string): iam.PolicyDocument {
         return new iam.PolicyDocument({
             statements: [
                 new iam.PolicyStatement({

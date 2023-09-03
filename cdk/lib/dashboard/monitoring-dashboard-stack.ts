@@ -20,18 +20,26 @@ export class MonitoringDashboardStack extends Stack {
         const widgetAlarms = new cw.CustomWidget({
             functionArn: this.getCustomWidgetArn(props, 'widget-alarms'),
             title: 'Alarm List',
+            width: 10,
+            height: 8,
         })
 
-        /*const widgetGates = new cw.CustomWidget({
+        const widgetGates = new cw.CustomWidget({
             functionArn: this.getCustomWidgetArn(props, 'widget-deployment-gates'),
             title: 'Deployment Gates',
-        })*/
+            width: 14,
+            height: 8,
+            params: {
+                hello: 'Hello Custom Widget'
+            }
+        })
 
         new cw.Dashboard(this, 'Dashboard', {
             dashboardName: 'My-Monitoring-Dashboard',
             widgets: [
                 [
                     widgetAlarms,
+                    widgetGates,
                 ],
             ],
         })
