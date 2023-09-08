@@ -24,22 +24,23 @@
 	  right: 0;
 	  bottom: 0;
 	  background-color: #cccccc;
-	  -webkit-transition: .3s;
-	  transition: .3s;
+	  -webkit-transition: .1s;
+	  transition: .1s;
 	}
 
     /* Before sliding */
 	.slider:before {
 	  position: absolute;
 	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 CLOSED";
+	  font-size: 20px;
 	  height: 26px;
 	  width: 26px;
 	  left: 4px;
 	  bottom: 4px;
 	  background-color: white;
-	  -webkit-transition: .3s;
-	  transition: .3s;
 	  font-size: 20px;
+	  -webkit-transition: .1s;
+	  transition: .1s;
 	}
 
 	input:checked + .slider {
