@@ -1,5 +1,6 @@
+import { Context } from 'aws-lambda'
 
-const displayResults = async (context) => {
+const displayResults = async (context: Context|ContextLight) => {
     return `
         <form><table>
             <tr>
@@ -21,15 +22,7 @@ interface ContextLight {
     invokedFunctionArn: string
 }
 
-export const handler = async (_event: any, context?: Context|ContextLight): Promise<string> => {
-
-    /*const widgetContext = event.widgetContext
-    const form = widgetContext.forms.all
-    const logGroups = form.logGroups || event.logGroups
-    const region = widgetContext.params.region || event.region || process.env.AWS_REGION
-    const timeRange = widgetContext.timeRange.zoom || widgetContext.timeRange
-    const logsClient = new aws.CloudWatchLogs({ region })
-    const resetQuery = event.resetQuery*/
+export const handler = async (_event: any, context: Context|ContextLight): Promise<string> => {
 
     console.log(JSON.stringify(_event, null, 3))
 
