@@ -5,7 +5,8 @@
 	  position: relative;
 	  display: inline-block;
 	  width: 60px;
-	  height: 34px;
+	  height: 26px;
+	  padding-top: 8px;
 	}
 
 	/* Hiding the default checkbox*/
@@ -26,6 +27,9 @@
 	  background-color: #cccccc;
 	  -webkit-transition: .1s;
 	  transition: .1s;
+	  -webkit-border-radius: 5px;
+	  -moz-border-radius: 5px;
+	  border-radius: 5px;	
 	}
 
     /* Before sliding */
@@ -41,6 +45,7 @@
 	  font-size: 20px;
 	  -webkit-transition: .1s;
 	  transition: .1s;
+	  border-radius: 3px;
 	}
 
 	input:checked + .slider {
@@ -58,3 +63,12 @@
 	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
 	}
 
+	input[type=text] {
+	  -webkit-border-radius: 5px;
+	  -moz-border-radius: 5px;
+	  border-radius: 5px;
+	  outline: none;
+	  height: 32px;
+	  border: 1px solid #bfbfbf;
+	  margin-right: 15px;
+	}	
