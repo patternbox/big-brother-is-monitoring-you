@@ -5,6 +5,7 @@ import { MonitoringSinkStack } from '../lib/oam/monitoring-sink-stack'
 import { MonitoringLinkStack } from '../lib/oam/monitoring-link-stack'
 import { WidgetHelloStack } from '../lib/dashboard/widget-hello-stack'
 import { WidgetAlarmsStack } from '../lib/dashboard/widget-alarms-stack'
+import { WidgetSandboxStack } from '../lib/dashboard/widget-sandbox-stack'
 import { WidgetDeploymentGatesStack } from '../lib/dashboard/widget-deployment-gates-stack'
 import { MonitoringDashboardStack } from '../lib/dashboard/monitoring-dashboard-stack'
 
@@ -30,6 +31,11 @@ new WidgetHelloStack(app, 'WidgetHello', {
 new WidgetAlarmsStack(app, 'WidgetAlarms', {
     stackName: `${STACK_PREFIX}-widget-alarms`,
     widgetName: 'widget-alarms',
+})
+
+new WidgetSandboxStack(app, 'WidgetSandbox', {
+    stackName: `${STACK_PREFIX}-widget-sandbox`,
+    widgetName: 'widget-sandbox',
 })
 
 new WidgetDeploymentGatesStack(app, 'WidgetDeploymentGates', {

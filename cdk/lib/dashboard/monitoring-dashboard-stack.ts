@@ -24,6 +24,13 @@ export class MonitoringDashboardStack extends Stack {
             height: 8,
         })
 
+        const widgetSandbox = new cw.CustomWidget({
+            functionArn: this.getCustomWidgetArn(props, 'widget-sandbox'),
+            title: 'Sandbox',
+            width: 10,
+            height: 8,
+        })
+
         const widgetGates = new cw.CustomWidget({
             functionArn: this.getCustomWidgetArn(props, 'widget-deployment-gates'),
             title: 'Deployment Gates',
@@ -40,6 +47,7 @@ export class MonitoringDashboardStack extends Stack {
                 [
                     widgetAlarms,
                     widgetGates,
+                    widgetSandbox,
                 ],
             ],
         })

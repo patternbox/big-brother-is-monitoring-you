@@ -4,7 +4,8 @@ import * as ddb from '@aws-sdk/client-dynamodb'
 
 import { ScanCommand, DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
 import { Context } from 'aws-lambda'
-import { readFileSync } from 'fs'
+//import { readFileSync } from 'fs'
+import { promises as fs } from 'fs'
 
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-oam/
 const oamClient = new oam.OAMClient({});
@@ -77,7 +78,7 @@ const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string,
     //const htmlForm = `<form><span class="checkbox">${gateComment}${gateToggle}${execButton}</span></form>`
     const htmlForm = `<div class="gate-state"><form>${gateComment}${gateToggle}</form></div>${execButton}`
 
-    const cwdbAction = `<cwdb-action display="my-widget" action="call" endpoint="${lambdaFunctionArn}">{ "instanceId": "i-342389adbfef" }</cwdb-action>`
+    const cwdbAction = `<cwdb-action display="my-widget" action="call" endpoint="${lambdaFunctionArn}">{ "identifier": "${elementId}" }</cwdb-action>`
     return `${htmlForm}${cwdbAction}`
 }
 
@@ -88,12 +89,12 @@ const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], idPrefix: stri
         .join('\n')
 }
 
-interface ContextLight {
-    invokedFunctionArn: string
+const css = async (): Promise<string> => {
+    return await fs.readFile('./style.css', 'utf-8')
 }
 
-const css = (): string => {
-    return readFileSync('./style.css', 'utf-8')
+interface ContextLight {
+    invokedFunctionArn: string
 }
 
 export const handler = async (_event: any, context?: Context|ContextLight): Promise<string> => {
@@ -108,10 +109,10 @@ export const handler = async (_event: any, context?: Context|ContextLight): Prom
         html += `<li>${linkedAccount.Label} (${crossAccountId})<br />&nbsp;<ul style="list-style-type: none;">${deploymentGatesHtml}</ul></li>`
     }
 
-    console.log(JSON.stringify(_event.widgetContext, null, 3))
+    console.log(JSON.stringify(_event, null, 3))
     console.log(JSON.stringify(_event.widgetContext.forms, null, 3))
 
-    return `<style>${css()}</style><ul>${html}</ul>`
+    return `<style>${await css()}</style><ul>${html}</ul>`
 }
 
 export const localHandler = async (event: any): Promise<any> => {

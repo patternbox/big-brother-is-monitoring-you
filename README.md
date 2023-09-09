@@ -27,6 +27,9 @@ awsume monitoring-developer-profile --auto-refresh --output-profile monitoring-d
 # Deploy custom widget "hello"
 npx cdk deploy WidgetHello --require-approval never
 
+# Deploy custom widget "sandbox"
+npx cdk deploy WidgetSandbox --require-approval never
+
 # Deploy custom widget "alarms"
 npx cdk deploy WidgetAlarms --require-approval never \
    --parameters MonitoringSinkArn=$MONITORING_SINK_ARN
