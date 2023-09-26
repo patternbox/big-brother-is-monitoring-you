@@ -25,19 +25,19 @@ npx cdk deploy MonitoringLink --require-approval never \
 awsume monitoring-developer-profile --auto-refresh --output-profile monitoring-developer
 
 # Deploy custom widget "hello"
-npx cdk deploy WidgetHello --require-approval never
+npx cdk deploy WidgetHello --exclusively --require-approval never
 
 # Deploy custom widget "sandbox"
-npx cdk deploy WidgetSandbox --require-approval never
+npx cdk deploy WidgetSandbox --exclusively --require-approval never
 
 # Deploy custom widget "alarms"
-npx cdk deploy WidgetAlarms --require-approval never \
+npx cdk deploy WidgetAlarms --exclusively --require-approval never \
    --parameters MonitoringSinkArn=$MONITORING_SINK_ARN
 
 # Deploy custom widget "deployment-gates"
-npx cdk deploy WidgetDeploymentGates --require-approval never \
+npx cdk deploy WidgetDeploymentGates --exclusively --require-approval never \
    --parameters MonitoringSinkArn=$MONITORING_SINK_ARN
 
 # Deploy monitoring-dashbaord
-npx cdk deploy MonitoringDashboard --require-approval never
+npx cdk deploy MonitoringDashboard --exclusively --require-approval never
 ```

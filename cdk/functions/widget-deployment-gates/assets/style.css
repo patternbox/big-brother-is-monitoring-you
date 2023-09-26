@@ -60,7 +60,7 @@
 	  -webkit-transform: translateX(26px);
 	  -ms-transform: translateX(26px);
 	  transform: translateX(26px);
-	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
+	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
 	}
 
 	input[type=text] {
@@ -72,3 +72,15 @@
 	  border: 1px solid #bfbfbf;
 	  margin-right: 15px;
 	}	
+
+	label.comment {
+		width: 130px;
+		display: inline-block;
+	}
+
+	div {
+		padding: 7px;
+		margin: 3px;
+		border: 1px dotted red;
+		border-radius: 10px;
+	}

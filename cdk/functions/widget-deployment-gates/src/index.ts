@@ -62,7 +62,7 @@ const fetchCrossAccountGateStates = async (credentials: sts.Credentials): Promis
 
 // https://github.com/aws-samples/cloudwatch-custom-widgets-samples#cwdb-action-examples
 const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string, lambdaFunctionArn: string): string => {
-    const gateComment = `<input type="text" id="comment-${elementId}" name="text-${elementId}" value="${deploymentGate.GateComment}" size="30">`
+    const gateComment = `<input type="text" id="comment-${elementId}" name="text-${elementId}" value="${deploymentGate.GateComment}" size="50">`
 
     /*const gateToggle = `<input type="checkbox" id="switch" class="checkbox">`
     const toggleLabel = `<label for="switch" class="toggle"><p>OFF    ON</p></label>`
@@ -76,7 +76,7 @@ const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string,
     const gateToggle = `<input type="checkbox" id="checkbox-${elementId}" name="check-${elementId}"><label for="${elementId}" class="text"></label>`
     const execButton = `<a class="btn btn-primary">OK</a>`
     //const htmlForm = `<form><span class="checkbox">${gateComment}${gateToggle}${execButton}</span></form>`
-    const htmlForm = `<div class="gate-state"><form>${gateComment}${gateToggle}</form></div>${execButton}`
+    const htmlForm = `<div><form>${gateComment}${gateToggle}</form></div>${execButton}`
 
     const cwdbAction = `<cwdb-action display="my-widget" action="call" endpoint="${lambdaFunctionArn}">{ "identifier": "${elementId}" }</cwdb-action>`
     return `${htmlForm}${cwdbAction}`

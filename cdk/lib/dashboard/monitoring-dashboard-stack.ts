@@ -27,7 +27,7 @@ export class MonitoringDashboardStack extends Stack {
         const widgetSandbox = new cw.CustomWidget({
             functionArn: this.getCustomWidgetArn(props, 'widget-sandbox'),
             title: 'Sandbox',
-            width: 10,
+            width: 16,
             height: 8,
         })
 
@@ -45,8 +45,8 @@ export class MonitoringDashboardStack extends Stack {
             dashboardName: 'My-Monitoring-Dashboard',
             widgets: [
                 [
-                    widgetAlarms,
-                    widgetGates,
+                    //widgetAlarms,
+                    //widgetGates,
                     widgetSandbox,
                 ],
             ],

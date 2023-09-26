@@ -54,7 +54,7 @@ export abstract class CustomWidgetStack extends Stack {
                 commandHooks: {
                     beforeBundling: (_inputDir: string, _outputDir: string): string[] => [],
                     afterBundling: (inputDir: string, outputDir: string): string[] => [
-                        `cp ${inputDir}/functions/widget-deployment-gates/assets/*.css ${outputDir}`,
+                        `cp ${inputDir}/functions/${props.widgetName}/assets/*.css ${outputDir} 2>/dev/null || :`,
                         `echo ------------------------------`,
                         `ls -la ${outputDir}`,
                         `echo ------------------------------`,
