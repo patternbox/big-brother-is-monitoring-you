@@ -46,8 +46,8 @@ export class MonitoringDashboardStack extends Stack {
             widgets: [
                 [
                     //widgetAlarms,
-                    //widgetGates,
-                    widgetSandbox,
+                    widgetGates,
+                    //widgetSandbox,
                 ],
             ],
         })

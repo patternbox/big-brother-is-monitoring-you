@@ -35,7 +35,7 @@
     /* Before sliding */
 	.slider:before {
 	  position: absolute;
-	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 CLOSED";
+	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 CLOSED";
 	  font-size: 20px;
 	  height: 26px;
 	  width: 26px;
@@ -60,7 +60,7 @@
 	  -webkit-transform: translateX(26px);
 	  -ms-transform: translateX(26px);
 	  transform: translateX(26px);
-	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
+	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
 	}
 
 	input[type=text] {
@@ -75,19 +75,26 @@
 
 	label.comment {
 		width: 150px;
+		margin-top: 5px;
 		display: inline-block;
 	}
 
 	a.btn {
-		margin-left: 120px;
+		margin-left: 130px;
 	}
 
 	div.gate {
+		height: 32px;
 		padding: 7px;
 		margin: 3px;
+	}
+
+	div.gate.modified {
 		border: 1px dotted red;
 		border-radius: 10px;
-		// display: flex;
-		// align-items: center;
-		// justify-content: center;
 	}
+
+  div.gate form {
+    display: flex;
+    align-items: flex-start;
+  }

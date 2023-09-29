@@ -61,31 +61,36 @@ const fetchCrossAccountGateStates = async (credentials: sts.Credentials): Promis
 }
 
 // https://github.com/aws-samples/cloudwatch-custom-widgets-samples#cwdb-action-examples
-const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string, lambdaFunctionArn: string): string => {
-    const gateComment = `<input type="text" id="comment-${elementId}" name="text-${elementId}" value="${deploymentGate.GateComment}" size="50">`
+const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string, lambdaFunctionArn: string, isModified: boolean): string => {
+    /*
+    <div class="gate modified">
+        <form>
+        <label class="comment">Application</label>
+        <input type="text" name="123-gate-comment" value="Gate-Comment-123" size="50">
+        <label class="switch">
+            <input type="checkbox" name="123-gate-open">
+            <span class="slider"></span>
+        </label>
+        <a class="btn">OK</a>
+        </form>
+        <cwdb-action action="call" endpoint="${context.invokedFunctionArn}">{ "identifier": "123" }</cwdb-action>
+    </div>
+    */
 
-    /*const gateToggle = `<input type="checkbox" id="switch" class="checkbox">`
-    const toggleLabel = `<label for="switch" class="toggle"><p>OFF    ON</p></label>`
-    const execButton = `<a class="btn">Execute</a>`
-    const htmlForm = `<form>${gateComment}${gateToggle}${toggleLabel}${execButton}</form>`*/
+    const gateLabel = `<label class="comment">${deploymentGate.GateName}</label>`
+    const gateComment = `<input type="text" name="text-${elementId}" value="${deploymentGate.GateComment}" size="50">`
+    const gateToggle = `<label class="switch"><input type="checkbox" name="toggle-${elementId}"><span class="slider"></span></label>`
 
-    /*const gateToggle = `<label class="switch"><input type="checkbox"><span class="slider"></span></label>`
-    const execButton = `<a class="btn">Execute</a>`
-    const htmlForm = `<form>${gateComment}${gateToggle}${execButton}</form>`*/
-
-    const gateToggle = `<input type="checkbox" id="checkbox-${elementId}" name="check-${elementId}"><label for="${elementId}" class="text"></label>`
-    const execButton = `<a class="btn btn-primary">OK</a>`
-    //const htmlForm = `<form><span class="checkbox">${gateComment}${gateToggle}${execButton}</span></form>`
-    const htmlForm = `<div><form>${gateComment}${gateToggle}</form></div>${execButton}`
-
+    const htmlForm = `<form>${gateLabel}${gateComment}${gateToggle}<a class="btn">OK</a></form>`
     const cwdbAction = `<cwdb-action display="my-widget" action="call" endpoint="${lambdaFunctionArn}">{ "identifier": "${elementId}" }</cwdb-action>`
-    return `${htmlForm}${cwdbAction}`
+    const modifiedClass = isModified ? ' modified' : ''
+    return `<div class="gate ${modifiedClass}">${htmlForm}${cwdbAction}</div>`
 }
 
 // https://catalog.workshops.aws/observability/en-US/aws-native/dashboards/custom-widgets/other-sources/display-results
 const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], idPrefix: string, lambdaFunctionArn: string): string => {
     return deploymentGates
-        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn)}</li>`)
+        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn, false)}</li>`)
         .join('\n')
 }
 

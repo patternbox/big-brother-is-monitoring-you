@@ -67,7 +67,7 @@ const displayResults3 = async (context: Context|ContextLight) => {
             <cwdb-action action="call" endpoint="${context.invokedFunctionArn}">{ "identifier": "xyz" }</cwdb-action>
         </div>
 
-        <div class="gate">
+        <div class="gate modified">
             <form>
             <label class="comment">Application</label>
             <input type="text" name="123-gate-comment" value="Gate-Comment-123" size="50">
