@@ -1,100 +1,119 @@
 /* Source: https://www.studytonight.com/code/playground/web/?id=chjCL2 */
 
-  /* CSS for switch*/
-	.switch {
-	  position: relative;
-	  display: inline-block;
-	  width: 60px;
-	  height: 26px;
-	  padding-top: 8px;
-	}
+/* CSS for switch*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 26px;
+  padding-top: 8px;
+}
 
-	/* Hiding the default checkbox*/
-	.switch input {
-	  opacity: 0;
-	  width: 0;
-	  height: 0;
-	}
+/* Hiding the default checkbox*/
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 
-	/* The slider */
-	.slider {
-	  position: absolute;
-	  cursor: pointer;
-	  top: 0;
-	  left: 0;
-	  right: 0;
-	  bottom: 0;
-	  background-color: #cccccc;
-	  -webkit-transition: .1s;
-	  transition: .1s;
-	  -webkit-border-radius: 5px;
-	  -moz-border-radius: 5px;
-	  border-radius: 5px;
-	}
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cccccc;
+  -webkit-transition: .1s;
+  transition: .1s;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 
-    /* Before sliding */
-	.slider:before {
-	  position: absolute;
-	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 CLOSED";
-	  font-size: 20px;
-	  height: 26px;
-	  width: 26px;
-	  left: 4px;
-	  bottom: 4px;
-	  background-color: white;
-	  font-size: 20px;
-	  -webkit-transition: .1s;
-	  transition: .1s;
-	  border-radius: 3px;
-	}
+  /* Before sliding */
+.slider:before {
+  position: absolute;
+  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 CLOSED";
+  font-size: 20px;
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  font-size: 20px;
+  -webkit-transition: .1s;
+  transition: .1s;
+  border-radius: 3px;
+}
 
-	input:checked + .slider {
-	  background-color: #234567;
-	}
+input:checked + .slider {
+  background-color: #234567;
+}
 
-	input:focus + .slider {
-	  box-shadow: 0 0 1px #564311;
-	}
+input:focus + .slider {
+  box-shadow: 0 0 1px #564311;
+}
 
-	input:checked + .slider:before {
-	  -webkit-transform: translateX(26px);
-	  -ms-transform: translateX(26px);
-	  transform: translateX(26px);
-	  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
-	}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  content: "\00A0\00A0\00A0\00A0\00A0\00A0\00A0\00A0 OPEN";
+}
 
-	input[type=text] {
-	  -webkit-border-radius: 5px;
-	  -moz-border-radius: 5px;
-	  border-radius: 5px;
-	  outline: none;
-	  height: 32px;
-	  border: 1px solid #bfbfbf;
-	  margin-right: 15px;
-	}
+input[type=text] {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  outline: none;
+  height: 32px;
+  border: 1px solid #bfbfbf;
+  margin-right: 15px;
+}
 
-	label.comment {
-		width: 150px;
-		margin-top: 5px;
-		display: inline-block;
-	}
+label.comment {
+  width: 150px;
+  margin-top: 6px;
+  display: inline-block;
+}
 
-	a.btn {
-		margin-left: 130px;
-	}
+a.btn {
+  margin-left: 130px;
+}
 
-	div.gate {
-		height: 32px;
-		padding: 7px;
-		margin: 3px;
-	}
+div.gate {
+  height: 32px;
+  padding: 5px;
+  margin: 3px;
+}
 
-	div.gate.modified {
-		border: 1px dotted red;
-		border-radius: 10px;
-	}
+div.gate.modified {
+  border: 1px dotted red;
+  border-radius: 10px;
+}
 
-  div.gate form {
-    display: flex;
-    align-items: flex-start;
-  }
+div.gate form {
+  display: flex;
+  align-items: flex-start;
+}
+
+li.account {
+  margin-top: 10px;
+}
+
+li.account ul {
+  list-style-type: none;
+  display: contents;
+}
+
+li.account ul > li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+li.account ul > li:first-child {
+  margin-top: 10px;
+}

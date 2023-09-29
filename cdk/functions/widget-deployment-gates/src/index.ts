@@ -90,7 +90,7 @@ const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string,
 // https://catalog.workshops.aws/observability/en-US/aws-native/dashboards/custom-widgets/other-sources/display-results
 const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], idPrefix: string, lambdaFunctionArn: string): string => {
     return deploymentGates
-        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn, false)}</li>`)
+        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn, true)}</li>`)
         .join('\n')
 }
 
@@ -111,11 +111,12 @@ export const handler = async (_event: any, context?: Context|ContextLight): Prom
         const crossAccountCredentials = await assumeCrossAccountCredentials(crossAccountId)
         const deploymentGates = await fetchCrossAccountGateStates(crossAccountCredentials)
         const deploymentGatesHtml = deploymentGatesAsHtml(deploymentGates, crossAccountId, context!.invokedFunctionArn)
-        html += `<li>${linkedAccount.Label} (${crossAccountId})<br />&nbsp;<ul style="list-style-type: none;">${deploymentGatesHtml}</ul></li>`
+        const accountText = `${linkedAccount.Label} (${crossAccountId})`
+        html += `<li class="account">${accountText}<ul>${deploymentGatesHtml}</ul></li>`
     }
 
     console.log(JSON.stringify(_event, null, 3))
-    console.log(JSON.stringify(_event.widgetContext.forms, null, 3))
+    // console.log(JSON.stringify(_event.widgetContext.forms, null, 3))
 
     return `<style>${await css()}</style><ul>${html}</ul>`
 }
