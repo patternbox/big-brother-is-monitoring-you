@@ -77,9 +77,10 @@ const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string,
     </div>
     */
 
-    const gateLabel = `<label class="comment">${deploymentGate.GateName}</label>`
+    const gateLabel = `<label class="comment">${deploymentGate.GateName}-${deploymentGate.GateName}</label>`
     const gateComment = `<input type="text" name="text-${elementId}" value="${deploymentGate.GateComment}" size="50">`
-    const gateToggle = `<label class="switch"><input type="checkbox" name="toggle-${elementId}"><span class="slider"></span></label>`
+    const isChecked = deploymentGate.GateClosed ? '' : 'checked="checked"'
+    const gateToggle = `<label class="switch"><input type="checkbox" name="toggle-${elementId}" ${isChecked}><span class="slider"></span></label>`
 
     const htmlForm = `<form>${gateLabel}${gateComment}${gateToggle}<a class="btn">OK</a></form>`
     const cwdbAction = `<cwdb-action display="my-widget" action="call" endpoint="${lambdaFunctionArn}">{ "identifier": "${elementId}" }</cwdb-action>`
@@ -90,7 +91,7 @@ const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string,
 // https://catalog.workshops.aws/observability/en-US/aws-native/dashboards/custom-widgets/other-sources/display-results
 const deploymentGatesAsHtml = (deploymentGates: DeploymentGate[], idPrefix: string, lambdaFunctionArn: string): string => {
     return deploymentGates
-        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn, true)}</li>`)
+        .map((gate) => `<li>${deploymentGateAsForm(gate, `${idPrefix}-${gate.GateName}`, lambdaFunctionArn, false)}</li>`)
         .join('\n')
 }
 
