@@ -77,7 +77,7 @@ const deploymentGateAsForm = (deploymentGate: DeploymentGate, elementId: string,
     </div>
     */
 
-    const gateLabel = `<label class="comment">${deploymentGate.GateName}-${deploymentGate.GateName}</label>`
+    const gateLabel = `<label class="comment">${deploymentGate.GateName}</label>`
     const gateComment = `<input type="text" name="text-${elementId}" value="${deploymentGate.GateComment}" size="50">`
     const isChecked = deploymentGate.GateClosed ? '' : 'checked="checked"'
     const gateToggle = `<label class="switch"><input type="checkbox" name="toggle-${elementId}" ${isChecked}><span class="slider"></span></label>`
@@ -103,7 +103,16 @@ interface ContextLight {
     invokedFunctionArn: string
 }
 
-export const handler = async (_event: any, context?: Context|ContextLight): Promise<string> => {
+export const handler = async (event: any, context?: Context|ContextLight): Promise<string> => {
+
+    console.log(JSON.stringify(event, null, 3))
+
+    if (event.identifier) {
+        const [accountId, ...gateNameParts] = event.identifier.split('-')
+        const gateName = gateNameParts.join('-')
+        console.log('IDENTIFIER-SPLIT: ', accountId, gateName)
+    }
+
     let html = ''
     const linkedSourceAcounts = await fetchLinkedSourceAccounts()
 
@@ -115,9 +124,6 @@ export const handler = async (_event: any, context?: Context|ContextLight): Prom
         const accountText = `${linkedAccount.Label} (${crossAccountId})`
         html += `<li class="account">${accountText}<ul>${deploymentGatesHtml}</ul></li>`
     }
-
-    console.log(JSON.stringify(_event, null, 3))
-    // console.log(JSON.stringify(_event.widgetContext.forms, null, 3))
 
     return `<style>${await css()}</style><ul>${html}</ul>`
 }
