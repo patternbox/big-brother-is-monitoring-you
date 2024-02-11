@@ -1,0 +1,19 @@
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "04:00"
+      timezone: "Europe/Berlin"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    versioning-strategy: lockfile-only
+    directory: "/cdk"
+    schedule:
+      interval: "daily"
+      time: "04:30"
+      timezone: "Europe/Berlin"
+    open-pull-requests-limit: 10
